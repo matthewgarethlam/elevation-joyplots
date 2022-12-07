@@ -1,0 +1,115 @@
+---
+title: "Untitled"
+author: "Matthew Lam"
+date: "2022-11-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Data
+```{r}
+library(ggplot2)
+library(ggridges)
+library(mapproj)
+
+CraterLake_80transects <- read.csv("CraterPointsWithCoords.csv")
+
+
+head(CraterLake_80transects)
+colnames(CraterLake_80transects)[1] <- "Elev"
+colnames(CraterLake_80transects)[2] <- "Lon"
+colnames(CraterLake_80transects)[3] <- "Lat"
+```
+
+##Basic Plot
+```{r}
+CraterLake_basic <- ggplot(CraterLake_80transects, aes(x = Lon, y = Lat, group = Lat, height = Elev)) + 
+  geom_density_ridges(stat = "identity")
+
+CraterLake_basic
+```
+##Customized Plot
+```{r}
+CraterLake_Joy <- 
+  ggplot(CraterLake_80transects,
+         aes(x=Lon, y=Lat, group=Lat, height=Elev))+
+  geom_density_ridges(stat="identity", scale=15, fill="black", color="white")+
+  ylim(42.77,43.15)+
+  scale_x_continuous(name="CRATER LAKE NATIONAL PARK") + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.background = element_rect(fill="black"),
+        axis.line=element_blank(), 
+        axis.text.x = element_blank(),
+        plot.background = element_rect(fill="black"),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_text(colour = 'white', size = 18)
+  ) + 
+  coord_map()
+  
+  
+CraterLake_Joy 
+```
+
+
+
+
+
+
+
+#now with lake district
+```{r}
+setwd("~/Desktop")
+LakeDist <- read.csv("LDPointsv2.csv")
+
+LakeDist <- LakeDist %>% select(Merged, xcoord, ycoord)
+
+colnames(LakeDist)[1] <- "Elev"
+colnames(LakeDist)[2] <- "Lon"
+colnames(LakeDist)[3] <- "Lat"
+
+LakeDist_basic <- ggplot(LakeDist, aes(x = Lon, y = Lat, group = Lat, height = Elev)) +
+  geom_density_ridges(stat = "identity")
+
+LakeDist_basic
+```
+
+
+
+## GGplot
+```{r}
+LakeDist_Joy <- 
+  ggplot(LakeDist,
+         aes(x=Lon, y=Lat, group=Lat, height=Elev))+
+  geom_density_ridges(stat="identity", scale=15, fill="#142526", color="white")+
+  # ylim(42.77,43.15)+
+  scale_x_continuous(name="") + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.background = element_rect(fill="#295156"),
+        axis.line=element_blank(), 
+        axis.text.x = element_blank(),
+        plot.background = element_rect(fill="#295156"),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x = element_text(colour = 'white', size = 18)
+  ) + 
+  coord_map("azequalarea")
+  
+  
+LakeDist_Joy
+ggsave(LakeDist_Joy,"LakeDist_Joy.pdf")
+```
+
+
+
+
+
